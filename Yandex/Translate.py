@@ -7,7 +7,7 @@ class Translate:
 
 		:param api_key: Your API key
 		'''
-		self.api_url = 'https://translate.yandex.net/api/{version}/tr.json/'.format(version='1.5')
+		self.api_url = 'https://translate.yandex.net/api/{version}/tr.json/'.format(version='v1.5')
 		self.api_key = api_key
 
 	def set_key(self, api_key):
@@ -29,11 +29,11 @@ class Translate:
 			data['lang'] = '{}-{}'.format(lang_from, lang_to)
 		else:
 			data['lang'] = lang_to
-		response = requests.get(self.api_url + 'translate?', data).json()
-		if response['code'] == 200:
-			return response['text'][0]
+		response = requests.get(self.api_url + 'translate?', data)
+		if response.status_code == 200:
+			return response.json()['text'][0]
 		else:
-			return response['message']
+			return response.json()['message']
 
 	def getLangs(self, ui='en'):
 		'''Method for getting supported translation directions. Returns dictionary
@@ -41,11 +41,11 @@ class Translate:
 		:param ui: Language of code's definitions. English by default
 		'''
 		data = {'key' : self.api_key, 'ui' : ui}
-		response = requests.get(self.api_url + 'getLangs?', data).json()
-		if response['code'] == 200:
-			return response
+		response = requests.get(self.api_url + 'getLangs?', data)
+		if response.status_code == 200:
+			return response.json()
 		else:
-			return response['message']
+			return response.json()['message']
 
 	def detect(self, text, *hint):
 		'''Method for detecting language of text. Returns language code in str
@@ -54,8 +54,8 @@ class Translate:
 		:param hint: Optional parameter. List of probable text languages codes
 		'''
 		data = {'key' : self.api_key, 'text' : text, 'hint' : hint}
-		response =  requests.get(self.api_url + 'getLangs?', data).json()
-		if response['code'] == 200:
-			return response['lang']
+		response =  requests.get(self.api_url + 'detect?', data)
+		if response.status_code == 200:
+			return response.json()['lang']
 		else:
-			return response['message']
+			return response.json()['message']
