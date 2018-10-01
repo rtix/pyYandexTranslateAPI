@@ -5,7 +5,7 @@ Implementation of Yandex.Translate API as a Python library
 Usage
 =======================
 
-It's very simle to use. There is only one class: Translate. Just import it:
+It's very simple to use. There is only one class: Translate. Just import it:
 ``` python
 from Yandex import Translate
 ```
