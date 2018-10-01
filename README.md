@@ -2,6 +2,12 @@
 
 Implementation of Yandex.Translate API as a Python library
 
+Get pyYandexTranslateAPI
+=======================
+```
+pip install pyyandextranslateapi
+```
+
 Usage
 =======================
 
