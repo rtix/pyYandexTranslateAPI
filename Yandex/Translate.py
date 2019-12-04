@@ -1,5 +1,8 @@
 import requests
 
+from Yandex.exceptions import *
+
+
 class Translate:
 
 	def __init__(self, api_key):
@@ -17,6 +20,20 @@ class Translate:
 		'''
 		self.api_key = api_key
 
+	def __raise_exception(self, code, message):
+		bad_response_codes = {
+			401 : InvalidAPIKeyError,
+			402 : BlockedAPIKeyError,
+			404 : DailyLimitExceededError,
+			413 : TextSizeExceededError,
+			422 : UntranslatableTextError,
+			501 : DirectionNotSupportedError}
+		
+		if code in bad_response_codes.keys():
+			raise bad_response_codes[code](message)
+		else:
+			raise YandexTranslateError(message)
+
 	def translate(self, text, lang_to, lang_from = None):
 		'''Method for translating text. Returns str
 
@@ -33,7 +50,7 @@ class Translate:
 		if response.status_code == 200:
 			return response.json()['text'][0]
 		else:
-			return response.json()['message']
+			self.__raise_exception(response.status_code, response.json()['message'])
 
 	def get_langs(self, ui = None):
 		'''Method for getting supported translation directions. Returns dictionary
@@ -45,7 +62,7 @@ class Translate:
 		if response.status_code == 200:
 			return response.json()
 		else:
-			return response.json()['message']
+			self.__raise_exception(response.status_code, response.json()['message'])
 
 	def detect(self, text, *hint):
 		'''Method for detecting language of text. Returns language code in str
@@ -58,4 +75,4 @@ class Translate:
 		if response.status_code == 200:
 			return response.json()['lang']
 		else:
-			return response.json()['message']
+			self.__raise_exception(response.status_code, response.json()['message'])
