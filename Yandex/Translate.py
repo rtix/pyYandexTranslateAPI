@@ -35,10 +35,10 @@ class Translate:
 		else:
 			return response.json()['message']
 
-	def get_langs(self, ui='en'):
+	def get_langs(self, ui = None):
 		'''Method for getting supported translation directions. Returns dictionary
 
-		:param ui: Language of code's definitions. English by default
+		:param ui: Optional parameter for language of code's definitions
 		'''
 		data = {'key' : self.api_key, 'ui' : ui}
 		response = requests.get(self.api_url + 'getLangs?', data)
