@@ -50,7 +50,7 @@ class Translate:
 		if response.status_code == 200:
 			return response.json()['text'][0]
 		else:
-			self.__raise_exception(response.status_code, response.json()['message'])
+			self.__raise_exception(response.json()['code'], response.json()['message'])
 
 	def get_langs(self, ui = None):
 		'''Method for getting supported translation directions. Returns dictionary
