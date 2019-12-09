@@ -6,7 +6,7 @@ from Yandex.exceptions import *
 class Translate:
 
 	def __init__(self, api_key):
-		'''Initializing object with Yandex.Translate API key
+		'''Initializing object with Yandex.Translate API key.
 
 		:param api_key: Your API key
 		'''
@@ -14,7 +14,7 @@ class Translate:
 		self.api_key = api_key
 
 	def set_key(self, api_key):
-		'''Method for API key resetting
+		'''Method for API key resetting.
 
 		:param api_key: Your API key
 		'''
@@ -35,7 +35,7 @@ class Translate:
 			raise YandexTranslateError(message)
 
 	def translate(self, text, lang_to, lang_from = None):
-		'''Method for translating text. Returns str
+		'''Method for translating text. Returns str.
 
 		:param text: Text to translate
 		:param lang_to: Translation direction
@@ -53,19 +53,22 @@ class Translate:
 			self.__raise_exception(response.json()['code'], response.json()['message'])
 
 	def get_langs(self, ui = None):
-		'''Method for getting supported translation directions. Returns dictionary
+		'''Method for getting supported languages.
+		Returns dictionary as language codes and their definitions.
 
-		:param ui: Optional parameter for language of code's definitions
+		:param ui: Optional parameter for language of code's definitions. English('en') by default
 		'''
+		if ui is None:
+			ui = 'en'
 		data = {'key' : self.api_key, 'ui' : ui}
 		response = requests.get(self.api_url + 'getLangs?', data)
 		if response.status_code == 200:
-			return response.json()
+			return response.json()['langs']
 		else:
-			self.__raise_exception(response.status_code, response.json()['message'])
+			self.__raise_exception(response.json()['code'], response.json()['message'])
 
-	def detect(self, text, *hint):
-		'''Method for detecting language of text. Returns language code in str
+	def detect(self, text, hint = None):
+		'''Method for detecting language of text. Returns language code as str.
 
 		:param text: Text to detect
 		:param hint: Optional parameter. List of probable text languages codes
@@ -75,4 +78,4 @@ class Translate:
 		if response.status_code == 200:
 			return response.json()['lang']
 		else:
-			self.__raise_exception(response.status_code, response.json()['message'])
+			self.__raise_exception(response.json()['code'], response.json()['message'])
