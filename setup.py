@@ -8,7 +8,7 @@ setuptools.setup(
     version="1.1",
     author="Radif rtix Tazetdinov",
     author_email="radif.tazetdinov@mail.ru",
-    description="Implementation of Yandex.Translate API as a Python library",
+    description="Python library for Yandex Translate API",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/rtix/pyYandexTranslateAPI",
