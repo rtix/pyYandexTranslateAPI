@@ -64,6 +64,16 @@ t.translate('Hello!', 'ru', lang_from='en')
 # Здравствуйте!
 ```
 
+## Exceptions
+If something went wrong, you will face exceptions:
+- `InvalidAPIKeyError` : Invalid API key
+- `BlockedAPIKeyError` : Blocked API key
+- `DailyLimitExceededError` : Exceeded the daily limit on the amount of translated text
+- `TextSizeExceededError` : Exceeded the maximum text size
+- `UntranslatableTextError` : The text cannot be translated
+- `DirectionNotSupportedError` : The specified translation direction is not supported
+- `YandexTranslateError` : Other kind of error
+
 ## For more information
 ### About API
 https://tech.yandex.com/translate/doc/dg/concepts/about-docpage/
