@@ -1,5 +1,5 @@
 # pyYandexTranslateAPI
-Implementation of Yandex.Translate API as a Python library
+Python library for Yandex Translate API
 
 # Get pyYandexTranslateAPI
 ```
