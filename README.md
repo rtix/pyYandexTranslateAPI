@@ -1,55 +1,82 @@
 # pyYandexTranslateAPI
+Python library for Yandex Translate API
 
-Implementation of Yandex.Translate API as a Python library
-
-Get pyYandexTranslateAPI
-=======================
+# Get pyYandexTranslateAPI
 ```
 pip install pyyandextranslateapi
 ```
 
-Usage
-=======================
+# Usage
+It's very simple to use. There is only one class: Translate
 
-It's very simple to use. There is only one class: Translate. Just import it:
+## Import
 ``` python
 from Yandex import Translate
 ```
 
-And use help(Translate) to get clear documentation of its methods:
+## Initialize
+Initialize your Translate with your API key for Yandex.Translate.
+You can get it for free on https://translate.yandex.com/developers/keys.
+``` python
+t = Translate(api_key=API_KEY)
 ```
-Help on class Translate in module Yandex.Translate:
+Just in case, you can change your key any moment:
+``` python
+t.set_key(OTHER_API_KEY)
+```
 
-class Translate(builtins.object)
- |  Translate(api_key)
- |
- |  Methods defined here:
- |
- |  __init__(self, api_key)
- |      Initializing object with Yandex.Translate API key
- |
- |      :param api_key: Your API key
- |
- |  detect(self, text, *hint)
- |      Method for detecting language of text. Returns language code in str
- |
- |      :param text: Text to detect
- |      :param hint: Optional parameter. List of probable text languages codes
- |
- |  getLangs(self, ui='en')
- |      Method for getting supported translation directions. Returns dictionary
- |
- |      :param ui: Language of code's definitions. English by default
- |
- |  set_key(self, api_key)
- |      Method for API key resetting
- |
- |      :param api_key: Your API key
- |
- |  translate(self, text, lang_to, lang_from=None)
- |      Method for translating text. Returns str
- |
- |      :param text: Text to translate
- |      :param lang_to: Translation direction
- |      :param lang_from: Optional parameter for specifying the original language
+## Use it
+### Get list of supported languages
+``` python
+t.get_langs()
+# {'af': 'Afrikaans', 'am': 'Amharic', 'ar': 'Arabic', ...}
 ```
+There is an optional parameter `ui` here which is for language of definitions of language codes:
+``` python
+t.get_langs(ui='ru')
+# {'af': 'Африкаанс', 'am': 'Амхарский', 'ar': 'Арабский', ...}
+```
+
+### Detect the language of text
+``` python
+t.detect(text='Здравствуйте!')
+# ru
+```
+There is an optional parameter `hint` where you can pass list of hints, if you have suggestions about text language:
+``` python
+t.detect('Здравствуйте!', hint=['ru', 'tt'])
+# ru
+```
+But it's not the list from where API will choose language! API can ingore your hints if he thinks that you are wrong:
+``` python
+t.detect('Hello!', ['ru', 'tt'])
+# en
+```
+
+### Translate text
+``` python
+t.translate(text='Hello!', lang_to='ru')
+# Здравствуйте!
+```
+There is an optional parameter `lang_from` where you can pass language of original text:
+``` python
+t.translate('Hello!', 'ru', lang_from='en')
+# Здравствуйте!
+```
+
+## Exceptions
+If something went wrong, you will face exceptions:
+- `InvalidAPIKeyError` : Invalid API key
+- `BlockedAPIKeyError` : Blocked API key
+- `DailyLimitExceededError` : Exceeded the daily limit on the amount of translated text
+- `TextSizeExceededError` : Exceeded the maximum text size
+- `UntranslatableTextError` : The text cannot be translated
+- `DirectionNotSupportedError` : The specified translation direction is not supported
+- `YandexTranslateError` : Other kind of error
+
+## For more information
+### About API
+https://tech.yandex.com/translate/doc/dg/concepts/about-docpage/
+
+### About this library
+radif.tazetdinov@mail.ru

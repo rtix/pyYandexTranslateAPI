@@ -1,9 +1,12 @@
 import requests
 
+from Yandex.exceptions import *
+
+
 class Translate:
 
 	def __init__(self, api_key):
-		'''Initializing object with Yandex.Translate API key
+		'''Initializing object with Yandex.Translate API key.
 
 		:param api_key: Your API key
 		'''
@@ -11,14 +14,28 @@ class Translate:
 		self.api_key = api_key
 
 	def set_key(self, api_key):
-		'''Method for API key resetting
+		'''Method for API key resetting.
 
 		:param api_key: Your API key
 		'''
 		self.api_key = api_key
 
+	def __raise_exception(self, code, message):
+		bad_response_codes = {
+			401 : InvalidAPIKeyError,
+			402 : BlockedAPIKeyError,
+			404 : DailyLimitExceededError,
+			413 : TextSizeExceededError,
+			422 : UntranslatableTextError,
+			501 : DirectionNotSupportedError}
+		
+		if code in bad_response_codes.keys():
+			raise bad_response_codes[code](message)
+		else:
+			raise YandexTranslateError(message)
+
 	def translate(self, text, lang_to, lang_from = None):
-		'''Method for translating text. Returns str
+		'''Method for translating text. Returns str.
 
 		:param text: Text to translate
 		:param lang_to: Translation direction
@@ -33,22 +50,25 @@ class Translate:
 		if response.status_code == 200:
 			return response.json()['text'][0]
 		else:
-			return response.json()['message']
+			self.__raise_exception(response.json()['code'], response.json()['message'])
 
-	def getLangs(self, ui='en'):
-		'''Method for getting supported translation directions. Returns dictionary
+	def get_langs(self, ui = None):
+		'''Method for getting supported languages.
+		Returns dictionary as language codes and their definitions.
 
-		:param ui: Language of code's definitions. English by default
+		:param ui: Optional parameter for language of code's definitions. English('en') by default
 		'''
+		if ui is None:
+			ui = 'en'
 		data = {'key' : self.api_key, 'ui' : ui}
 		response = requests.get(self.api_url + 'getLangs?', data)
 		if response.status_code == 200:
-			return response.json()
+			return response.json()['langs']
 		else:
-			return response.json()['message']
+			self.__raise_exception(response.json()['code'], response.json()['message'])
 
-	def detect(self, text, *hint):
-		'''Method for detecting language of text. Returns language code in str
+	def detect(self, text, hint = None):
+		'''Method for detecting language of text. Returns language code as str.
 
 		:param text: Text to detect
 		:param hint: Optional parameter. List of probable text languages codes
@@ -58,4 +78,4 @@ class Translate:
 		if response.status_code == 200:
 			return response.json()['lang']
 		else:
-			return response.json()['message']
+			self.__raise_exception(response.json()['code'], response.json()['message'])

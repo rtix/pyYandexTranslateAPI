@@ -5,14 +5,17 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="pyyandextranslateapi",
-    version="1.0",
+    version="1.1",
     author="Radif rtix Tazetdinov",
     author_email="radif.tazetdinov@mail.ru",
-    description="Implementation of Yandex.Translate API as a Python library",
+    description="Python library for Yandex Translate API",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/rtix/pyYandexTranslateAPI",
     packages=setuptools.find_packages(),
+    install_requires=[
+        'requests'
+    ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
